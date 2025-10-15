@@ -1,6 +1,7 @@
 package calculator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class InputParser {
@@ -23,8 +24,8 @@ public class InputParser {
     }
 
     private static List<PositiveNumber> defaultParse(String input) {
-        String[] strings = input.split(DEFAULT_DELIMITER1 + DEFAULT_DELIMITER2);
-        return stringsToPositiveNumbers(strings);
+        String[] strings = input.split(DEFAULT_DELIMITER1 + "|" + DEFAULT_DELIMITER2);
+        return stringsToPositiveNumbers(strings, new ArrayList<>());
     }
 
     private static List<PositiveNumber> customParse(String input) {
@@ -35,23 +36,17 @@ public class InputParser {
         int index = input.indexOf(CUSTOM_DELIMITER_SUFFIX);
         String customDelimiter = input.substring(2, index);
         String[] strings = input.substring(index + 2).split(customDelimiter);
-        return stringsToPositiveNumbers(strings);
+        return stringsToPositiveNumbers(strings, new ArrayList<>());
     }
 
-    private static List<PositiveNumber> stringsToPositiveNumbers(String[] strings) {
-        List<PositiveNumber> result = new ArrayList<>();
-        for (String string : strings) {
-            isValid(string);
-            System.out.println(string);
-            result.add(new PositiveNumber(Integer.parseInt(string)));
-        }
-        return result;
+    private static List<PositiveNumber> stringsToPositiveNumbers(String[] strings, List<PositiveNumber> numbers) {
+        return Arrays.stream(strings).map(s -> new PositiveNumber(Integer.parseInt(s))).toList();
     }
 
-    private static void isValid(String token) {
-        for (char c : token.toCharArray()) {
+    private static void isNumbers(String string) {
+        for (char c : string.toCharArray()) {
             if (!isNumber(c)) {
-                throw new IllegalArgumentException("Invalid token: " + token);
+                throw new IllegalArgumentException("Invalid string: " + string);
             }
         }
     }

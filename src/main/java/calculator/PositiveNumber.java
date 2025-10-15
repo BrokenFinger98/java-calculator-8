@@ -1,18 +1,18 @@
 package calculator;
 
 public class PositiveNumber {
-    private final Integer value;
+    private final int value;
 
-    public PositiveNumber(Integer number) {
-        isPositive(number);
+    public PositiveNumber(int number) {
+        isNegative(number);
         this.value = number;
     }
 
-    public Integer getValue() {
-        return value;
+    public int addTo(int number) {
+        return value + number;
     }
 
-    private void isPositive(Integer number) {
+    private void isNegative(int number) {
         if (number < 0) {
             throw new IllegalArgumentException("Negative number");
         }

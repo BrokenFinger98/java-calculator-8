@@ -8,8 +8,9 @@ public class Application {
         Printer.printStartSentence();
         final String input = Console.readLine();
         List<PositiveNumber> numbers = InputParser.parse(input);
-        Integer sum = Calculator.sum(numbers);
+        PositiveNumbers positiveNumbers = new PositiveNumbers(numbers);
+
+        int sum = positiveNumbers.sum();
         Printer.printResultSentence(sum);
-        return;
     }
 }
