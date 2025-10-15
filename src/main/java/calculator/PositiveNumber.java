@@ -8,13 +8,13 @@ public class PositiveNumber {
         this.value = number;
     }
 
-    public void isPositive(Number number) {
+    public Number getValue() {
+        return value;
+    }
+
+    private void isPositive(Number number) {
         if (number.doubleValue() < 0) {
             throw new IllegalArgumentException("Negative number");
         }
-    }
-
-    public Number getValue() {
-        return value;
     }
 }
