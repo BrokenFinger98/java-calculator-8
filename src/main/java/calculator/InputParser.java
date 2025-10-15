@@ -13,10 +13,10 @@ public class InputParser {
 
     public static List<PositiveNumber> parse(String input) {
         if (isBlank(input)) {
-            return new ArrayList<>();
+            return List.of();
         }
 
-        if (isNumber(input.charAt(0))) {
+        if (Character.isDigit(input.charAt(0))) {
             return defaultParse(input);
         }
 
@@ -45,17 +45,13 @@ public class InputParser {
 
     private static void isNumbers(String string) {
         for (char c : string.toCharArray()) {
-            if (!isNumber(c)) {
+            if (Character.isDigit(c)) {
                 throw new IllegalArgumentException("Invalid string: " + string);
             }
         }
     }
 
     private static boolean isBlank(String string) {
-        return string == null || string.trim().isEmpty();
-    }
-
-    private static boolean isNumber(Character character) {
-        return character >= '0' && character <= '9';
+        return string == null || string.isEmpty();
     }
 }
