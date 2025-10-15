@@ -43,31 +43,41 @@
 ## 구현 기능 목록
 
 - Printer Class
-    - `private static final String startSentence = "덧셈할 문자열을 입력해 주세요.";`을 인스턴스 변수로 가진다.
-    - `private static final String resultPrefix = "결과 : "`을 인스턴스 변수로 가진다.
-    - `BufferedWriter`를 인스턴스 변수로 가진다.
-    - printStartSentence(): startSentence를 출력
-    - printResultSentence(Double sum): resultPrefix + sum 출력
+    - `private static final String START_SENTENCE = "덧셈할 문자열을 입력해 주세요.";`을 인스턴스 변수로 가진다.
+    - `private static final String RESULT_PREFIX = "결과 : "`을 인스턴스 변수로 가진다.
+    - 기능
+        - startSentence() : 시작 문구 문자열 반환
+        - resultSentence(Integer sum) : "결과 : " + 합계 문자열 반환
 
-- 덧셈할 문자열 입력
+- 문자열 입력
     - camp.nextstep.edu.missionutils에서 제공하는 Console API를 사용하여 구현해야 한다.
     - 사용자가 입력하는 값은 camp.nextstep.edu.missionutils.Console의 readLine()을 활용한다.
 
 - InputParser Class
-    - 쉼표(,) 또는 콜론(:)을 구분자로 파싱
-    - 커스텀 구분자로 파싱
-        - 커스텀 구분자: "//"와 "\n" 사이에 위치하는 문자
-        - 커스텀 구분자로 파싱하는 경우 모든 구분자는 커스텀 구분자여야 한다.
-    - 문자열 파싱 후, List<Number>로 숫자들을 반환
+    - 문자열을 파싱하여 List<PositiveNumber> 형태로 반환한다.
+    - 지원 구분자
+        - 기본 구분자: 쉼표(,), 콜론(:)
+        - 커스텀 구분자: "//"와 "\n" 사이에 위치한 문자
+          예: "//;\n1;2;3" → ;를 구분자로 사용
+    - 기능
+        - parse(String input) : 문자열 전체를 파싱하여 양수 리스트 반환
+        - 구분자 기준으로 분리 후, 숫자만 포함되어 있는지 검증
+        - 숫자가 아닌 문자가 포함된 경우 IllegalArgumentException 발생
+        - 빈 문자열("", " ", "//;\n")은 List.of() 반환
 
 - PositiveNumber Class
-    - isPositive(): Number가 양수인지 판단하는 메서드
-    - 계산기에 사용할 수 있게 Double Type으로 변환
-    - List<Number>를 인자로 갖고 List<PositiveNumber>를 반환하는 메서드
+    - 역할: 양수만을 표현하는 값 객체(Value Object)
+    - private final int value
+    - 생성자에서 0 이하의 값 입력 시 IllegalArgumentException 발생
+    - getValue() : 값을 반환
+    - addTo(int sum) : 현재 값을 기존 합에 더해 반환 (optional behavior)
 
-- Calculator Class
-    - List<PositiveNumber> numbers를 인스턴스 변수로 가진 클래스
-    - sum(): numbers의 합을 반환
+- PositiveNumbers Class
+    - 역할: List<PositiveNumber>를 포장한 일급 컬렉션
+    - private final List<PositiveNumber> values
+    - 기능
+        - sum() : 모든 양수의 합 반환
+        - 불변 컬렉션으로 관리하며 외부 변경 불가
 
 - 조건을 만족하지 않는 경우 `IllegalArgumentException`을 발생시킨 후 애플리케이션은 종료되어야 한다.
 - 프로그램 종료 시 `System.exit()`를 호출하지 않는다.
