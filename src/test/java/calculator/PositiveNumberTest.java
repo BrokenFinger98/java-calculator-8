@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class PositiveNumberTest {
 
     @Test
-    @DisplayName("양수를 생성한다.")
+    @DisplayName("PositiveNumber를 생성한다.")
     void positiveNumber() {
         // given
         int number = 1;
@@ -43,7 +43,7 @@ public class PositiveNumberTest {
 
         // when
         int result = positiveNumber.addTo(number1);
-        
+
         // then
         assertThat(result).isEqualTo(number1 + number2);
     }
