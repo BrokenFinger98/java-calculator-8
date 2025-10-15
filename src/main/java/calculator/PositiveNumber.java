@@ -1,11 +1,11 @@
 package calculator;
 
 public class PositiveNumber {
-    private final Double value;
+    private final Number value;
 
     public PositiveNumber(Number number) {
         isPositive(number);
-        this.value = number.doubleValue();
+        this.value = number;
     }
 
     public void isPositive(Number number) {
@@ -14,11 +14,7 @@ public class PositiveNumber {
         }
     }
 
-    public Double getValue() {
+    public Number getValue() {
         return value;
-    }
-
-    public String getValueAsString() {
-        return String.valueOf(value);
     }
 }

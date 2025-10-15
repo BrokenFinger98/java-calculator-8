@@ -25,8 +25,8 @@ public class Printer {
         writer.flush();
     }
 
-    public void printResultSentence(PositiveNumber sum) throws IOException {
-        writer.append(RESULT_PREFIX).append(sum.getValueAsString()).append("\n");
+    public void printResultSentence(Double sum) throws IOException {
+        writer.append(RESULT_PREFIX).append(sum.toString()).append("\n");
         writer.flush();
         writer.close();
     }
