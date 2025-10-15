@@ -11,12 +11,11 @@ public class InputParser {
     private static final String CUSTOM_DELIMITER_SUFFIX = "\\n";
 
     public static List<PositiveNumber> parse(String input) {
-        if (input == null || input.isEmpty()) {
+        if (isBlank(input)) {
             return new ArrayList<>();
         }
 
-        char startCharacter = input.charAt(0);
-        if (startCharacter >= '0' && startCharacter <= '9') {
+        if (isNumber(input.charAt(0))) {
             return defaultParse(input);
         }
 
@@ -24,13 +23,8 @@ public class InputParser {
     }
 
     private static List<PositiveNumber> defaultParse(String input) {
-        String[] tokens = input.split(DEFAULT_DELIMITER1 + DEFAULT_DELIMITER2);
-        List<PositiveNumber> result = new ArrayList<>();
-        for (String token : tokens) {
-            isValid(token);
-            result.add(new PositiveNumber(Double.parseDouble(token)));
-        }
-        return result;
+        String[] strings = input.split(DEFAULT_DELIMITER1 + DEFAULT_DELIMITER2);
+        return stringsToPositiveNumbers(strings);
     }
 
     private static List<PositiveNumber> customParse(String input) {
@@ -39,22 +33,34 @@ public class InputParser {
         }
 
         int index = input.indexOf(CUSTOM_DELIMITER_SUFFIX);
+        String customDelimiter = input.substring(2, index);
+        String[] strings = input.substring(index + 2).split(customDelimiter);
+        return stringsToPositiveNumbers(strings);
+    }
 
-        String customDelimiter = input.substring(3, index + 1);
-        String[] tokens = input.substring(index + 3).split(customDelimiter);
+    private static List<PositiveNumber> stringsToPositiveNumbers(String[] strings) {
         List<PositiveNumber> result = new ArrayList<>();
-        for (String token : tokens) {
-            isValid(token);
-            result.add(new PositiveNumber(Double.parseDouble(token)));
+        for (String string : strings) {
+            isValid(string);
+            System.out.println(string);
+            result.add(new PositiveNumber(Integer.parseInt(string)));
         }
         return result;
     }
 
     private static void isValid(String token) {
         for (char c : token.toCharArray()) {
-            if (!((c >= '0' && c <= '9') || c == '.')) {
+            if (!isNumber(c)) {
                 throw new IllegalArgumentException("Invalid token: " + token);
             }
         }
+    }
+
+    private static boolean isBlank(String string) {
+        return string == null || string.trim().isEmpty();
+    }
+
+    private static boolean isNumber(Character character) {
+        return character >= '0' && character <= '9';
     }
 }

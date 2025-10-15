@@ -8,7 +8,7 @@ public class Application {
         Printer.printStartSentence();
         final String input = Console.readLine();
         List<PositiveNumber> numbers = InputParser.parse(input);
-        Double sum = Calculator.sum(numbers);
+        Integer sum = Calculator.sum(numbers);
         Printer.printResultSentence(sum);
         return;
     }

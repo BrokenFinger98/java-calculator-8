@@ -9,7 +9,7 @@ public class Printer {
         System.out.println(START_SENTENCE);
     }
 
-    public static void printResultSentence(Double sum) {
+    public static void printResultSentence(Integer sum) {
         System.out.println(RESULT_PREFIX + sum);
     }
 
