@@ -70,3 +70,4 @@
     - sum(): numbers의 합을 반환
 
 - 조건을 만족하지 않는 경우 `IllegalArgumentException`을 발생시킨 후 애플리케이션은 종료되어야 한다.
+- 프로그램 종료 시 `System.exit()`를 호출하지 않는다.
