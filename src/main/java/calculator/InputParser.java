@@ -1,13 +1,15 @@
 package calculator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class InputParser {
 
     private static final String DEFAULT_DELIMITER1 = ",";
     private static final String DEFAULT_DELIMITER2 = ":";
+    private static final String DEFAULT_REGEX = DEFAULT_DELIMITER1 + "|" + DEFAULT_DELIMITER2;
+
     private static final String CUSTOM_DELIMITER_PREFIX = "//";
     private static final String CUSTOM_DELIMITER_SUFFIX = "\\n";
 
@@ -17,41 +19,63 @@ public class InputParser {
         }
 
         if (Character.isDigit(input.charAt(0))) {
-            return defaultParse(input);
+            return parseWithDefaultDelimiters(input);
         }
 
-        return customParse(input);
+        return parseWithCustomDelimiter(input);
     }
 
-    private static List<PositiveNumber> defaultParse(String input) {
-        String[] strings = input.split(DEFAULT_DELIMITER1 + "|" + DEFAULT_DELIMITER2);
-        return stringsToPositiveNumbers(strings, new ArrayList<>());
+    private static List<PositiveNumber> parseWithDefaultDelimiters(String input) {
+        String[] strings = input.split(DEFAULT_REGEX);
+        validateAllNumeric(strings);
+        return toPositiveNumbers(strings);
     }
 
-    private static List<PositiveNumber> customParse(String input) {
-        if (!input.startsWith(CUSTOM_DELIMITER_PREFIX) || !input.contains(CUSTOM_DELIMITER_SUFFIX)) {
-            throw new IllegalArgumentException("Failed to parse input: " + input);
+    private static List<PositiveNumber> parseWithCustomDelimiter(String input) {
+        if (!input.startsWith(CUSTOM_DELIMITER_PREFIX)) {
+            throw new IllegalArgumentException("Invalid custom delimiter pattern: " + input);
         }
 
         int index = input.indexOf(CUSTOM_DELIMITER_SUFFIX);
-        String customDelimiter = input.substring(2, index);
-        String[] strings = input.substring(index + 2).split(customDelimiter);
-        return stringsToPositiveNumbers(strings, new ArrayList<>());
+        if (index < 0) {
+            throw new IllegalArgumentException("Invalid custom delimiter pattern: " + input);
+        }
+
+        String rawDelimiter = input.substring(CUSTOM_DELIMITER_PREFIX.length(), index);
+        String quoted = Pattern.quote(rawDelimiter);
+        String body = input.substring(index + CUSTOM_DELIMITER_SUFFIX.length());
+
+        if (isBlank(body)) {
+            return List.of();
+        }
+
+        String[] strings = body.split(quoted);
+        validateAllNumeric(strings);
+        return toPositiveNumbers(strings);
     }
 
-    private static List<PositiveNumber> stringsToPositiveNumbers(String[] strings, List<PositiveNumber> numbers) {
-        return Arrays.stream(strings).map(s -> new PositiveNumber(Integer.parseInt(s))).toList();
+    private static List<PositiveNumber> toPositiveNumbers(String[] strings) {
+        return Arrays.stream(strings)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .map(Integer::parseInt)
+                .map(PositiveNumber::new).toList();
     }
 
-    private static void isNumbers(String string) {
-        for (char c : string.toCharArray()) {
-            if (Character.isDigit(c)) {
-                throw new IllegalArgumentException("Invalid string: " + string);
-            }
+    private static void validateAllNumeric(String[] strings) {
+        Arrays.stream(strings)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .forEach(InputParser::assertDigitsOnly);
+    }
+
+    private static void assertDigitsOnly(String string) {
+        if (!string.chars().allMatch(Character::isDigit)) {
+            throw new IllegalArgumentException("Invalid number: " + string);
         }
     }
 
     private static boolean isBlank(String string) {
-        return string == null || string.isEmpty();
+        return string == null || string.trim().isEmpty();
     }
 }
