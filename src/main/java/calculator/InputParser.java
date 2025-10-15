@@ -18,11 +18,11 @@ public class InputParser {
             return List.of();
         }
 
-        if (Character.isDigit(input.charAt(0))) {
-            return parseWithDefaultDelimiters(input);
+        if (hasCustomDelimiter(input)) {
+            return parseWithCustomDelimiter(input);
         }
 
-        return parseWithCustomDelimiter(input);
+        return parseWithDefaultDelimiters(input);
     }
 
     private static List<PositiveNumber> parseWithDefaultDelimiters(String input) {
@@ -32,10 +32,6 @@ public class InputParser {
     }
 
     private static List<PositiveNumber> parseWithCustomDelimiter(String input) {
-        if (!input.startsWith(CUSTOM_DELIMITER_PREFIX)) {
-            throw new IllegalArgumentException("Invalid custom delimiter pattern: " + input);
-        }
-
         int index = input.indexOf(CUSTOM_DELIMITER_SUFFIX);
         if (index < 0) {
             throw new IllegalArgumentException("Invalid custom delimiter pattern: " + input);
@@ -60,6 +56,10 @@ public class InputParser {
                 .filter(s -> !s.isEmpty())
                 .map(Integer::parseInt)
                 .map(PositiveNumber::new).toList();
+    }
+
+    private static boolean hasCustomDelimiter(String input) {
+        return input.startsWith(CUSTOM_DELIMITER_PREFIX);
     }
 
     private static void validateAllNumeric(String[] strings) {
